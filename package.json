@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "lit": "^3.1.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  },
+  "scripts": {
+    "build": "npx esbuild --outdir=dist --bundle --minify src/index.js"
+  }
+}

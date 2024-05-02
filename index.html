@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>custom-elements</title>
+    <script src="dist/index.js" type="module"></script>
+</head>
+<body>
+<h1>Custom elements</h1>
+<h2>Multiselect</h2>
+
+<div style="padding: 5px">
+    <form name="formData" method="post" action="#">
+        <multi-select
+                name="multiSelect"
+                json-data='[{"id": 1,"name": "hallo"},{"id": 2,"name": "foo"},{"id": 3,"name": "bar"},{"id": 4,"name": "fooBar"}]'
+                value="[1,4]"
+                display-field="name"
+                value-field="id">
+        </multi-select>
+    </form>
+</div>
+
+<script>
+    (function () {
+        const stringLength = () => {
+            const len = [3, 4, 5, 6, 7, 8, 9, 10, 11];
+            return len[Math.floor(Math.random() * len.length)]
+        }
+
+        const createRandomString = () => {
+            const chars = "abcdefghijklmnopqrstuvwxyz";
+            let result = "";
+            for (let i = 0; i < stringLength(); i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+                if (i === 0) {
+                    result.toUpperCase();
+                }
+            }
+
+            return result;
+        }
+
+        const createData = () => {
+            const data = [];
+            for (let i = 0; i < 50; i++) {
+                data.push({
+                    id: i + 1,
+                    name: createRandomString()
+                });
+            }
+
+            return data;
+        }
+
+        document.querySelector('multi-select').jsonData = createData();
+    }());
+</script>
+</body>
+</html>
