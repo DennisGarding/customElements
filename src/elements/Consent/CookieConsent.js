@@ -125,11 +125,11 @@ class CookieConsent extends LitElement {
 
     renderButton(buttonText, buttonAction) {
         if (!buttonText) {
-            return html``;
+            return ``;
         }
 
         return html`
-            <div class="accept-button-container">
+            <div class="default-button-container">
                 <div class="button default-button" @click="${buttonAction}">
                     ${buttonText}
                 </div>
@@ -148,13 +148,22 @@ class CookieConsent extends LitElement {
     }
 
     renderCheckboxContainer() {
+        // TODO: REMOVE AFTER DEBUG
+        console.log('o0');
+        console.log(this.checkboxConfig);
+        // TODO: REMOVE AFTER DEBUG
         if (!this.checkboxConfig.length) {
-            return html``;
+            return ``;
         }
-
+// TODO: REMOVE AFTER DEBUG
+console.log('Map checkboxes');
+// TODO: REMOVE AFTER DEBUG
         return html`
             <div class="checkbox-container">
                 ${this.checkboxConfig.map(checkbox => {
+                    // TODO: REMOVE AFTER DEBUG
+                    console.log(checkbox);
+                    // TODO: REMOVE AFTER DEBUG
                     return this.renderCheckbox(checkbox);
                 })}
             </div>
@@ -163,7 +172,7 @@ class CookieConsent extends LitElement {
 
     renderLinkContainer() {
         if (!this.linkConfig.length) {
-            return html``;
+            return ``;
         }
 
         return html`
