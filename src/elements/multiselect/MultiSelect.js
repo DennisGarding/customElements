@@ -1,17 +1,8 @@
 import { LitElement, html, css } from 'lit';
+import { MultiSelectStyle } from "./MultiSelectStyle";
 
 class MultiSelect extends LitElement {
-    timeoutLength = 300;
-    hiddenClass = 'hidden';
-
-    list = null;
-    searchField = null;
-    closeTimeout = null;
-
-    // Used for form association
-    #internals;
-    // Used for form association
-    static formAssociated = true;
+    static styles = MultiSelectStyle;
 
     static properties = {
         jsonData: { type: Array, attribute: 'json-data' },
@@ -22,6 +13,19 @@ class MultiSelect extends LitElement {
         open: { type: Boolean }
     };
 
+    timeoutLength = 300;
+    hiddenClass = 'hidden';
+
+    list = null;
+    searchField = null;
+    closeTimeout = null;
+
+    // Used for form association
+    #internals;
+
+    // Used for form association
+    static formAssociated = true;
+
     constructor() {
         super();
 
@@ -30,9 +34,9 @@ class MultiSelect extends LitElement {
     }
 
     connectedCallback() {
-        super.connectedCallback()
+        super.connectedCallback();
 
-        if (!this.jsonData instanceof Array) {
+        if (!(this.jsonData instanceof Array)) {
             throw new Error('No "json-data" provided');
         }
 
@@ -44,21 +48,21 @@ class MultiSelect extends LitElement {
             throw new Error('No "value-field" provided');
         }
 
-        if (!this.value instanceof Array) {
+        if (!(this.value instanceof Array)) {
             this.value = [];
             this.setAttribute('value', JSON.stringify(this.value));
         }
 
-        this.setFormData();
+        this.setFormValue();
     }
 
     /**
      * Function is used for form association
      */
-    setFormData() {
+    setFormValue() {
         const formData = new FormData();
         this.value.forEach((val) => {
-            formData.append(`${this.name}[]`, String(val));
+            formData.append(`${this.name}[]`, val);
         });
 
         this.#internals.setFormValue(formData);
@@ -70,14 +74,21 @@ class MultiSelect extends LitElement {
         }
 
         const value = parseInt(event.currentTarget.dataset.value);
-        if (this.value.includes(String(value))) {
-            this.value.splice(this.value.indexOf(value), 1);
+        let itemIndex = -1;
+        this.value.some((key, index) => {
+            if (parseInt(key) === value) {
+                itemIndex = index;
+            }
+        });
+
+        if (itemIndex > -1) {
+            this.value.splice(itemIndex, 1);
         } else {
-            this.value.push(String(value));
+            this.value.push(value);
         }
 
         this.setAttribute('value', JSON.stringify(this.value));
-        this.setFormData();
+        this.setFormValue();
     }
 
     onChevronClick() {
@@ -121,14 +132,24 @@ class MultiSelect extends LitElement {
     }
 
     isSelected(value) {
-        return this.value.includes(String(value));
+        let includes = false;
+
+        this.value.some((current) => {
+            if (parseInt(current) === value || String(current) === value) {
+                includes = true;
+
+                return true;
+            }
+        });
+
+        return includes;
     }
 
     getListItem(value) {
         let listItem;
 
         this.jsonData.some((item) => {
-            if (String(item[this.valueField]) === String(value)) {
+            if (this.compareAsInteger(item, value) || this.compareAsString(item, value)) {
                 listItem = item;
 
                 return true;
@@ -136,6 +157,14 @@ class MultiSelect extends LitElement {
         });
 
         return listItem;
+    }
+
+    compareAsString(item, value) {
+        return String(item[this.valueField]) === value;
+    }
+
+    compareAsInteger(item, value) {
+        return parseInt(item[this.valueField]) === value;
     }
 
     showList() {
@@ -211,121 +240,6 @@ class MultiSelect extends LitElement {
                 </div>
             </div>`;
     }
-
-    static styles = css`
-        .hidden {
-            display: none;
-            height: 0;
-        }
-
-        .multi-select-container {
-            font-family: sans-serif;
-            width: 100%;
-        }
-
-        .multi-select-wrapper {
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            padding: 5px;
-        }
-
-        .multi-select-select-list {
-            position: absolute;
-            max-height: 350px;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            padding: 0;
-            border-radius: 0;
-            z-index: 999;
-            width: 100%;
-            border-left: 1px solid lightgray;
-            border-right: 1px solid lightgray;
-            border-bottom: 1px solid lightgray;
-        }
-
-        .multi-select-search-field-input-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .multi-select-chevron-down {
-            cursor: pointer;
-            position: absolute;
-            right: 10px;
-            top: 3px;
-            font-size: 22px;
-        }
-
-        .multi-select-search-field-input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: .375rem 2.25rem .375rem .75rem;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            color: #212529;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-
-            &:focus {
-                border-color: #86b7fe;
-                outline: 0;
-                box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
-            }
-        }
-
-        .multi-select-select-list-item {
-            background: #ffffff;
-            padding: 5px 5px;
-            cursor: pointer;
-
-            &:hover {
-                background: #dee2e6;
-            }
-
-            &.selected {
-                background: #86b7fe;
-
-                &:hover {
-                    background: #dee2e6;
-                }
-            }
-        }
-
-        .multi-select-selected-container {
-            overflow-x: hidden;
-            display: flex;
-            height: 38px;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-            padding: 3px;
-        }
-
-        .multi-select-select-badge {
-            display: inline-block;
-            text-wrap: nowrap;
-            margin: 0 5px 3px 0;
-            background: #fdfdfd;
-            vertical-align: center;
-            padding: .175rem .5rem .175rem .75rem;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            color: #212529;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-        }
-
-        .cross {
-            cursor: pointer;
-            color: #212529;
-
-            &:hover {
-                color: #86b7fe;
-            }
-        }
-    `;
 }
 
 export { MultiSelect };

@@ -4,25 +4,105 @@
     <meta charset="UTF-8">
     <title>custom-elements</title>
     <script src="dist/index.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1>Custom elements</h1>
-<h2>Multiselect</h2>
 
-<div style="padding: 5px">
+
+<div class="container">
+    <h2>Multiselect</h2>
+    <pre class="code prettyprint lang-html">
+        <code>
+&#x3C;multi-select
+    name=&#x22;multiSelect&#x22;
+    json-data=&#x27;[{&#x22;id&#x22;: 1,&#x22;name&#x22;: &#x22;hallo&#x22;},{&#x22;id&#x22;: 2,&#x22;name&#x22;: &#x22;foo&#x22;},{&#x22;id&#x22;: 3,&#x22;name&#x22;: &#x22;bar&#x22;},{&#x22;id&#x22;: 4,&#x22;name&#x22;: &#x22;fooBar&#x22;}]&#x27;
+    value=&#x22;[1,4]&#x22;
+    display-field=&#x22;name&#x22;
+    value-field=&#x22;id&#x22;&#x3E;
+&#x3C;/multi-select&#x3E;
+        </code>
+    </pre>
     <form name="formData" method="post" action="#">
         <multi-select
                 name="multiSelect"
                 json-data='[{"id": 1,"name": "hallo"},{"id": 2,"name": "foo"},{"id": 3,"name": "bar"},{"id": 4,"name": "fooBar"}]'
-                value="[1,4]"
+                value='["1","4"]'
                 display-field="name"
                 value-field="id">
         </multi-select>
     </form>
 </div>
 
+
+<div class="container">
+    <h2>Cookie consent</h2>
+    <pre class="code prettyprint lang-html">
+        <code>
+&#x3C;cookie-consent
+    consent-title=&#x22;We respect your privacy&#x22;
+    consent-text=&#x22;At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.&#x22;
+    checkbox-config=&#x27;[
+        {&#x22;name&#x22;: &#x22;technicalRequired&#x22;, &#x22;label&#x22;: &#x22;Technical required&#x22;, &#x22;required&#x22;: true},
+        {&#x22;name&#x22;: &#x22;comfort&#x22;, &#x22;label&#x22;: &#x22;Comfort&#x22;},
+        {&#x22;name&#x22;: &#x22;statisticAndTracking&#x22;, &#x22;label&#x22;: &#x22;Statistic and Tracking&#x22;}
+    ]&#x27;
+    link-config=&#x27;[
+        {&#x22;label&#x22;: &#x22;Privacy policy&#x22;, &#x22;href&#x22;: &#x22;https://www.link-to-your-privacy-poilcy.com&#x22;},
+        {&#x22;label&#x22;: &#x22;Cookie policy&#x22;, &#x22;href&#x22;: &#x22;https://www.ink-to-your-cookie-poilcy.com&#x22;}
+    ]&#x27;
+    accept-all-button-text=&#x22;Accept all&#x22;
+    accept-selected-button-text=&#x22;Accept selection&#x22;
+    leave-page-button-text=&#x22;Leave page&#x22;&#x3E;
+&#x3C;/cookie-consent&#x3E;
+        </code>
+    </pre>
+    <div class="consent-container">
+        <input type="button" value="Reset" data-resetConsent="true">
+        <cookie-consent
+                consent-title="We respect your privacy"
+                consent-text="At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam."
+                accept-all-button-text="Accept all"
+                accept-selected-button-text="Accept selection"
+                leave-page-button-text="Leave page"
+                checkbox-config='[
+                    {"name": "technicalRequired", "label": "Technical required", "required": true}
+                    {"name": "comfort", "label": "Comfort"},
+                    {"name": "statisticAndTracking", "label": "Statistic and Tracking"}
+                ]'
+                link-config='[
+                    {"label": "Privacy policy", "href": "https://www.link-to-your-privacy-poilcy.com"},
+                    {"label": "Cookie policy", "href": "https://www.ink-to-your-cookie-poilcy.com"}
+                ]'
+                >
+        </cookie-consent>
+    </div>
+</div>
+<div class="container">
+    <h2>Boolean switch</h2>
+    <pre class="code prettyprint lang-html">
+        <code>
+&#x3C;boolean-switch name=&#x22;test&#x22; label=&#x22;This is a test&#x22;&#x3E;&#x3C;/boolean-switch&#x3E;
+
+&#x3C;boolean-switch name=&#x22;test&#x22; label=&#x22;This is a checked test&#x22; checked=&#x22;checked&#x22;&#x3E;&#x3C;/boolean-switch&#x3E;
+
+&#x3C;boolean-switch name=&#x22;test&#x22; label=&#x22;This is a disabled test&#x22; disabled=&#x22;disabled&#x22;&#x3E;&#x3C;/boolean-switch&#x3E;
+
+&#x3C;boolean-switch name=&#x22;test&#x22; label=&#x22;This is a checked and disabled test&#x22; checked=&#x22;checked&#x22; disabled=&#x22;disabled&#x22;&#x3E;&#x3C;/boolean-switch&#x3E;
+        </code>
+    </pre>
+    <boolean-switch name="test" label="This is a test"></boolean-switch>
+
+    <boolean-switch name="test" label="This is a checked test" checked="checked"></boolean-switch>
+
+    <boolean-switch name="test" label="This is a disabled test" disabled="disabled"></boolean-switch>
+
+    <boolean-switch name="test" label="This is a checked and disabled test" checked="checked" disabled="disabled"></boolean-switch>
+</div>
 <script>
     (function () {
+        // Multiselect
         const stringLength = () => {
             const len = [3, 4, 5, 6, 7, 8, 9, 10, 11];
             return len[Math.floor(Math.random() * len.length)]
@@ -54,6 +134,14 @@
         }
 
         document.querySelector('multi-select').jsonData = createData();
+
+        // Consent manager
+        const onConsentResetClick = () => {
+            document.cookie = `consent=${JSON.stringify([])}; path=/; expires=${new Date(new Date().getTime() - 1000).toGMTString()};`;
+            document.location.reload();
+        }
+
+        document.querySelector('input[data-resetConsent="true"]').addEventListener('click', onConsentResetClick);
     }());
 </script>
 </body>

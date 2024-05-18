@@ -1,0 +1,14 @@
+div.container {
+    padding: 1rem;
+}
+
+pre.code {
+    overflow: hidden;
+    background: lightgray;
+    padding: 1rem;
+}
+
+.consent-container {
+    position: relative;
+    height: 500px;
+}
