@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>custom-elements</title>
+    <script src="../dist/index.js" type="application/javascript"></script>
+</head>
+<body>
+<div class="container">
+    <multi-select
+            name="multiSelect"
+            json-data='[{"id": 1,"name": "hallo"},{"id": 2,"name": "foo"},{"id": 3,"name": "bar"},{"id": 4,"name": "fooBar"}]'
+            value='["1","4"]'
+            display-field="name"
+            value-field="id">
+    </multi-select>
+</div>
+</body>
+</html>
