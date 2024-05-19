@@ -148,22 +148,13 @@ class CookieConsent extends LitElement {
     }
 
     renderCheckboxContainer() {
-        // TODO: REMOVE AFTER DEBUG
-        console.log('o0');
-        console.log(this.checkboxConfig);
-        // TODO: REMOVE AFTER DEBUG
         if (!this.checkboxConfig.length) {
             return ``;
         }
-// TODO: REMOVE AFTER DEBUG
-console.log('Map checkboxes');
-// TODO: REMOVE AFTER DEBUG
+
         return html`
             <div class="checkbox-container">
                 ${this.checkboxConfig.map(checkbox => {
-                    // TODO: REMOVE AFTER DEBUG
-                    console.log(checkbox);
-                    // TODO: REMOVE AFTER DEBUG
                     return this.renderCheckbox(checkbox);
                 })}
             </div>
