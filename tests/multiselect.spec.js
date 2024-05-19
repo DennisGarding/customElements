@@ -30,15 +30,22 @@ test('Multiselect test', async ({ page }) => {
     });
 
     await test.step('Removes badge and selected class on click current selected element', async () => {
-        const selectionOne = await page.locator('.multi-select-select-list > div[data-value="1"]');
-        await selectionOne.click();
-        await expect(selectionOne).not.toHaveClass(/selected/);
+        // check current state
+        const selectedContainer = await page.locator('.multi-select-selected-container');
+        await expect(selectedContainer).toHaveText(/hallo/);
 
         const badgeOne = await page.locator('.multi-select-selected-container > span[data-value="1"]');
-        await expect(badgeOne).not.toBeVisible();
+        await expect(badgeOne).toBeVisible();
 
-        const selectedContainer = await page.locator('.multi-select-selected-container');
-        await expect(selectedContainer).not.toHaveText('hallo');
+        const selectionOne = await page.locator('.multi-select-select-list > div[data-value="1"]');
+        await expect(selectionOne).toHaveClass(/selected/);
+
+        // Unselect a value
+        await selectionOne.click();
+
+        await expect(selectedContainer).not.toHaveText(/hallo/);
+        await expect(badgeOne).not.toBeVisible();
+        await expect(selectionOne).not.toHaveClass(/selected/);
     });
 
     await test.step('adds badge and selected class on click on not selected element', async () => {
@@ -49,5 +56,13 @@ test('Multiselect test', async ({ page }) => {
         const badgeTwo = await page.locator('.multi-select-selected-container > span[data-value="2"]');
         await expect(badgeTwo).toBeVisible();
         await expect(badgeTwo).toHaveText(/foo/);
+
+        const selectionThree = await page.locator('.multi-select-select-list > div[data-value="3"]');
+        await selectionThree.click();
+        await expect(selectionThree).toHaveClass(/selected/);
+
+        const badgeThree = await page.locator('.multi-select-selected-container > span[data-value="3"]');
+        await expect(badgeThree).toBeVisible();
+        await expect(badgeThree).toHaveText(/bar/);
     });
 });

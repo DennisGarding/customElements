@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>custom-elements</title>
+    <script src="../dist/index.js" type="application/javascript"></script>
+</head>
+<body>
+<div class="container">
+    <cookie-consent
+            consent-title="We respect your privacy"
+            consent-text="At vero eos et accusam et justo duo dolores et ea rebum. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam."
+            checkbox-config='[
+                    {"name": "technicalRequired", "label": "Technical required", "required": true},
+                    {"name": "comfort", "label": "Comfort"},
+                    {"name": "statisticAndTracking", "label": "Statistic and Tracking"}
+                ]'
+            link-config='[
+                    {"label": "Privacy policy", "href": "https://www.link-to-your-privacy-poilcy.com"},
+                    {"label": "Cookie policy", "href": "https://www.ink-to-your-cookie-poilcy.com"}
+                ]'
+            accept-all-button-text="Accept all"
+            accept-selected-button-text="Accept selection"
+            leave-page-button-text="Leave page"
+    >
+    </cookie-consent>
+</div>
+</body>
+</html>
