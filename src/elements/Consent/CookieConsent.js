@@ -18,6 +18,7 @@ class CookieConsent extends LitElement {
 
     hiddenClass = 'hidden';
     oneYear = 31536000000;
+    value = null;
 
     constructor() {
         super();
@@ -45,6 +46,11 @@ class CookieConsent extends LitElement {
         if (!this.acceptAllButtonText) {
             throw new Error('CookieConsent - accept-all-button-text required')
         }
+
+        const cookie = this.getCookie();
+        if (cookie !== null) {
+            this.value = cookie;
+        }
     }
 
     onAcceptAllButtonClick() {
@@ -53,7 +59,7 @@ class CookieConsent extends LitElement {
         })
 
         this.setCookie(accepted);
-        this.close();
+        this.close(accepted);
     }
 
     onAcceptSelectedButtonClick() {
@@ -64,7 +70,7 @@ class CookieConsent extends LitElement {
         });
 
         this.setCookie(accepted);
-        this.close();
+        this.close(accepted);
     }
 
     onLeavePageButtonClick() {
@@ -90,8 +96,14 @@ class CookieConsent extends LitElement {
         return new Date(new Date().getTime() + this.oneYear).toGMTString()
     }
 
-    close() {
+    close(accepted) {
         this.getOverlay().classList.add(this.hiddenClass);
+        this.value = accepted;
+        this.dispatchEvent(new CustomEvent('close', {
+            detail: {
+                accepted: accepted
+            }
+        }));
     }
 
     getOverlay() {
@@ -140,7 +152,8 @@ class CookieConsent extends LitElement {
     renderCheckbox(checkbox) {
         if (checkbox.required) {
             return html`
-                <boolean-switch name="${checkbox.name}" label="${checkbox.label}" checked="checked" disabled="disabled"></boolean-switch>`;
+                <boolean-switch name="${checkbox.name}" label="${checkbox.label}" checked="checked"
+                                disabled="disabled"></boolean-switch>`;
         }
 
         return html`
