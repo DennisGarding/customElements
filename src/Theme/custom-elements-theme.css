@@ -1,0 +1,37 @@
+:root {
+    /* background */
+    --cs-background: #fff;
+
+    /* primary colors */
+    --cs-primary: #0d6efd;
+    --cs-primary--hover: #86b7fe;
+    --cs-primary-shadow: rgba(13, 110, 253, .25);
+
+    /* border */
+    --cs-border: #dee2e6;
+    --cs-border-radius: 0.25rem;
+    --cs-border-width: 1px;
+
+    /* font */
+    --cs-text-color: #212529;
+    --cs-line-height: 1.5;
+    --cs-font-weight: 400;
+    --cs-font-size: 1rem;
+
+    /** padding */
+    --cs-padding: 0.5rem;
+    --cs-search-field-padding: .375rem 2.25rem .375rem .75rem;
+    --cs-badge-padding: 0.3rem;
+
+    /** margin */
+    --cs-margin: 0.5rem;
+
+    /** list */
+    --cs-max-height: 15rem;
+    --cs-list-z-index: 99;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+}

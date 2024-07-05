@@ -1,7 +1,7 @@
 import { css } from 'lit';
 import { Colors } from "../../Colors";
 
-const BooleanSwitchStyle = css`
+export const BooleanSwitchStyle = css`
     * {
         margin: 0;
         padding: 0;
@@ -63,5 +63,3 @@ const BooleanSwitchStyle = css`
     }
 }
 `;
-
-export { BooleanSwitchStyle };

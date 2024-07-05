@@ -1,126 +1,67 @@
 import { css } from 'lit';
-import { Colors } from "../../Colors";
 
-const MultiSelectStyle = css`
-    * {
-        margin: 0;
-        padding: 0;
+export const MultiSelectStyle = css`
+    :host {
         box-sizing: border-box;
-        font-family: sans-serif;
-    }
+        background: var(--cs-background);
 
-    .hidden {
-        display: none;
-        height: 0;
-    }
+        .cs-multi-select-wrapper {
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+            padding: var(--cs-padding);
+            border: var(--cs-border-width) solid var(--cs-border);
+            border-radius: var(--cs-border-radius);
+            position: relative;
 
-    .multi-select-container {
-        font-family: sans-serif;
-        width: 100%;
-    }
+            .cs-multi-select-badge-container {
+                overflow: hidden;
+                display: flex;
+                height: 2.4rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                padding: 0 0 .5rem 0;
+            }
 
-    .multi-select-wrapper {
-        border: 1px solid ${Colors.border};
-        border-radius: 5px;
-        padding: .5rem;
-    }
+            .cs-multi-select-search-field-input {
+                width: 100%;
+                box-sizing: border-box;
+                padding: var(--cs-search-field-padding);
+                border: var(--cs-border-width) solid var(--cs-border);
+                border-radius: var(--cs-border-radius);
+                color: var(--cs-text-color);
+                font-size: var(--cs-font-size);
+                font-weight: var(--cs-font-weight);
+                line-height: var(--cs-line-height);
 
-    .multi-select-select-list {
-        position: absolute;
-        max-height: 15rem;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        padding: 0;
-        border-radius: 0;
-        z-index: 999;
-        width: 100%;
-        border-left: 1px solid ${Colors.border};
-        border-right: 1px solid ${Colors.border};
-        border-bottom: 1px solid ${Colors.border};
-    }
+                &:focus {
+                    border-color: var(--cs-primary--hover);
+                    outline: 0;
+                    box-shadow: 0 0 0 .25rem var(--cs-primary-shadow);
+                }
+            }
 
-    .multi-select-search-field-input-container {
-        position: relative;
-        width: 100%;
-    }
-
-    .multi-select-chevron-down {
-        cursor: pointer;
-        position: absolute;
-        right: 10px;
-        top: 3px;
-        font-size: 22px;
-    }
-
-    .multi-select-search-field-input {
-        width: 100%;
-        box-sizing: border-box;
-        padding: .375rem 2.25rem .375rem .75rem;
-        border: 1px solid ${Colors.border};
-        border-radius: 5px;
-        color: ${Colors.linkColor};
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-
-        &:focus {
-            border-color: ${Colors.primaryLight};
-            outline: 0;
-            box-shadow: 0 0 0 .25rem ${Colors.focusBoxShadow};
-        }
-    }
-
-    .multi-select-select-list-item {
-        background: ${Colors.primaryBackground};
-        padding: .5rem;
-        cursor: pointer;
-
-        &:hover {
-            background: ${Colors.border};
-        }
-
-        &.selected {
-            background: ${Colors.primaryLight};
-
-            &:hover {
-                background: ${Colors.border};
+            .cs-multi-select-selection-list {
+                box-sizing: border-box;
+                visibility: hidden;
+                position: absolute;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                width: 100%;
+                max-height: var(--cs-max-height);
+                z-index: var(--cs-list-z-index);
+                background: var(--cs-background);
+                border-left: var(--cs-border-width) solid var(--cs-border);
+                border-right: var(--cs-border-width) solid var(--cs-border);
+                border-bottom: var(--cs-border-width) solid var(--cs-border);
             }
         }
     }
 
-    .multi-select-selected-container {
-        overflow-x: hidden;
-        display: flex;
-        height: 2.4rem;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        padding: 0 0 .5rem 0;
-    }
-
-    .multi-select-select-badge {
-        display: inline-block;
-        text-wrap: nowrap;
-        margin: 0 .5rem 0 0;
-        background: ${Colors.border};
-        vertical-align: center;
-        padding: .175rem .5rem .175rem .75rem;
-        border: 1px solid ${Colors.border};
-        border-radius: 5px;
-        color: ${Colors.linkColor};
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-    }
-
-    .cross {
-        cursor: pointer;
-        color: ${Colors.linkColor};
-
-        &:hover {
-            color: ${Colors.primaryLight};
+    :host-context([open]) {
+        .cs-multi-select-selection-list {
+            visibility: visible;
         }
     }
 `;
-
-export { MultiSelectStyle };

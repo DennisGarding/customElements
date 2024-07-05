@@ -2,17 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>custom-elements</title>
+    <title>custom-elements multi-select</title>
     <script src="../dist/index.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="../src/Theme/custom-elements-theme.css">
 </head>
 <body>
 <div class="container">
-    <multi-select
-            name="multiSelect"
-            json-data='[{"id": 1,"name": "hallo"},{"id": 2,"name": "foo"},{"id": 3,"name": "bar"},{"id": 4,"name": "fooBar"}]'
-            value='["1","4"]'
-            display-field="name"
-            value-field="id">
+    <multi-select name="multiSelect">
+        <multi-select-option value="1">Foo 1</multi-select-option>
+        <multi-select-option selected value="2">Bar 2</multi-select-option>
+        <multi-select-option value="3">Foo 3</multi-select-option>
+        <multi-select-option selected value="4">Foo 4</multi-select-option>
+        <multi-select-option value="5">Bar 5</multi-select-option>
+        <multi-select-option value="6">Bar 6</multi-select-option>
+        <multi-select-option value="7">Foo 7</multi-select-option>
+        <multi-select-option value="8">Foo 8</multi-select-option>
+        <multi-select-option value="9">Bar 9</multi-select-option>
+        <multi-select-option value="10">Foo 10</multi-select-option>
+        <multi-select-option value="11">Bar 11</multi-select-option>
+        <multi-select-option value="12">Foo 12</multi-select-option>
+        <multi-select-option value="13">Bar 13</multi-select-option>
+        <multi-select-option value="14">Foo 14</multi-select-option>
+        <multi-select-option value="15">Bar 15</multi-select-option>
     </multi-select>
 </div>
 </body>

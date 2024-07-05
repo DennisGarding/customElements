@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "npx esbuild --outdir=dist --bundle --minify src/index.js",
-    "serve": "npx esbuild --servedir=./ --serve=127.0.0.1:9000",
+    "watch": "npx esbuild --outdir=dist --bundle src/index.js --watch --servedir=./ --serve=127.0.0.1:9000",
     "e2e-tests": "npm run build && npx playwright test"
   }
 }
