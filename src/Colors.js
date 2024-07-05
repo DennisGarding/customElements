@@ -4,7 +4,7 @@ const Colors = {
     primary: css`#0d6efd`,
     primaryLight: css`#86b7fe`,
     primaryHover: css`#0b5ed7`,
-    secondary: css`#6c757d`,
+    secondary: css`#75797c`,
     secondaryHover: css`#5c636a`,
     primaryBackground: css`#ffffff`,
     overlayBackground: css`rgba(0, 0, 0, 0.9)`,

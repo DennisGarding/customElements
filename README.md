@@ -18,12 +18,22 @@ Create a new tag `<multi-select>`
 ```html
 <!--index.html-->
 
-<multi-select
-        name="multiSelect"
-        json-data='[{"id": 1,"name": "hallo"},{"id": 2,"name": "foo"},{"id": 3,"name": "bar"},{"id": 4,"name": "fooBar"}]'
-        value="[1,4]"
-        display-field="name"
-        value-field="id">
+<multi-select name="test">
+    <multi-select-option value="1">Bla1</multi-select-option>
+    <multi-select-option selected value="2">Blubb2</multi-select-option>
+    <multi-select-option value="3">Blubb3</multi-select-option>
+    <multi-select-option value="4">Blubb4</multi-select-option>
+    <multi-select-option value="5">Blubb5</multi-select-option>
+    <multi-select-option value="6">Blubb6</multi-select-option>
+    <multi-select-option value="7">Blubb7</multi-select-option>
+    <multi-select-option value="8">Blubb8</multi-select-option>
+    <multi-select-option value="9">Blubb9</multi-select-option>
+    <multi-select-option value="10">Blubb10</multi-select-option>
+    <multi-select-option value="11">Blubb11</multi-select-option>
+    <multi-select-option value="12">Blubb12</multi-select-option>
+    <multi-select-option value="13">Blubb13</multi-select-option>
+    <multi-select-option value="14">Blubb14</multi-select-option>
+    <multi-select-option value="15">Blubb15</multi-select-option>
 </multi-select>
 ```
 ## CookieConsent

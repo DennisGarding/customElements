@@ -6,6 +6,7 @@
     <script src="dist/index.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/src/Theme/custom-elements-theme.css">
 </head>
 <body>
 <h1>Custom elements</h1>
@@ -14,23 +15,45 @@
     <h2>Multiselect</h2>
     <pre class="code prettyprint lang-html">
         <code>
-&#x3C;multi-select
-    name=&#x22;multiSelect&#x22;
-    json-data=&#x27;[{&#x22;id&#x22;: 1,&#x22;name&#x22;: &#x22;hallo&#x22;},{&#x22;id&#x22;: 2,&#x22;name&#x22;: &#x22;foo&#x22;},{&#x22;id&#x22;: 3,&#x22;name&#x22;: &#x22;bar&#x22;},{&#x22;id&#x22;: 4,&#x22;name&#x22;: &#x22;fooBar&#x22;}]&#x27;
-    value=&#x22;[1,4]&#x22;
-    display-field=&#x22;name&#x22;
-    value-field=&#x22;id&#x22;&#x3E;
+&#x3C;multi-select name=&#x22;test&#x22;&#x3E;
+    &#x3C;multi-select-option value=&#x22;1&#x22;&#x3E;Bla1&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option selected value=&#x22;2&#x22;&#x3E;Blubb2&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;3&#x22;&#x3E;Blubb3&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;4&#x22;&#x3E;Blubb4&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;5&#x22;&#x3E;Blubb5&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;6&#x22;&#x3E;Blubb6&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;7&#x22;&#x3E;Blubb7&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;8&#x22;&#x3E;Blubb8&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;9&#x22;&#x3E;Blubb9&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;10&#x22;&#x3E;Blubb10&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;11&#x22;&#x3E;Blubb11&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;12&#x22;&#x3E;Blubb12&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;13&#x22;&#x3E;Blubb13&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;14&#x22;&#x3E;Blubb14&#x3C;/multi-select-option&#x3E;
+    &#x3C;multi-select-option value=&#x22;15&#x22;&#x3E;Blubb15&#x3C;/multi-select-option&#x3E;
 &#x3C;/multi-select&#x3E;
         </code>
     </pre>
-    <form name="formData" method="post" action="#">
-        <multi-select
-                name="multiSelect"
-                json-data='[{"id": 1,"name": "hallo"},{"id": 2,"name": "foo"},{"id": 3,"name": "bar"},{"id": 4,"name": "fooBar"}]'
-                value='["1","4"]'
-                display-field="name"
-                value-field="id">
+    <form name="formData" method="get" action="#">
+        <multi-select name="test">
+            <multi-select-option value="1">Bla1</multi-select-option>
+            <multi-select-option selected value="2">Blubb2</multi-select-option>
+            <multi-select-option value="3">Blubb3</multi-select-option>
+            <multi-select-option value="4">Blubb4</multi-select-option>
+            <multi-select-option value="5">Blubb5</multi-select-option>
+            <multi-select-option value="6">Blubb6</multi-select-option>
+            <multi-select-option value="7">Blubb7</multi-select-option>
+            <multi-select-option value="8">Blubb8</multi-select-option>
+            <multi-select-option value="9">Blubb9</multi-select-option>
+            <multi-select-option value="10">Blubb10</multi-select-option>
+            <multi-select-option value="11">Blubb11</multi-select-option>
+            <multi-select-option value="12">Blubb12</multi-select-option>
+            <multi-select-option value="13">Blubb13</multi-select-option>
+            <multi-select-option value="14">Blubb14</multi-select-option>
+            <multi-select-option value="15">Blubb15</multi-select-option>
         </multi-select>
+
+        <input type="submit" value="Submit">
     </form>
 </div>
 
@@ -99,49 +122,17 @@
 
     <boolean-switch name="test" label="This is a checked and disabled test" checked="checked" disabled="disabled"></boolean-switch>
 </div>
+
 <script>
-    (function () {
-        // Multiselect
-        const stringLength = () => {
-            const len = [3, 4, 5, 6, 7, 8, 9, 10, 11];
-            return len[Math.floor(Math.random() * len.length)]
-        }
+(function () {
+    // Consent manager
+    const onConsentResetClick = () => {
+        document.cookie = `consent=${JSON.stringify([])}; path=/; expires=${new Date(new Date().getTime() - 1000).toGMTString()};`;
+        document.location.reload();
+    }
 
-        const createRandomString = () => {
-            const chars = "abcdefghijklmnopqrstuvwxyz";
-            let result = "";
-            for (let i = 0; i < stringLength(); i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-                if (i === 0) {
-                    result.toUpperCase();
-                }
-            }
-
-            return result;
-        }
-
-        const createData = () => {
-            const data = [];
-            for (let i = 0; i < 50; i++) {
-                data.push({
-                    id: i + 1,
-                    name: createRandomString()
-                });
-            }
-
-            return data;
-        }
-
-        document.querySelector('multi-select').jsonData = createData();
-
-        // Consent manager
-        const onConsentResetClick = () => {
-            document.cookie = `consent=${JSON.stringify([])}; path=/; expires=${new Date(new Date().getTime() - 1000).toGMTString()};`;
-            document.location.reload();
-        }
-
-        document.querySelector('input[data-resetConsent="true"]').addEventListener('click', onConsentResetClick);
-    }());
+    document.querySelector('input[data-resetConsent="true"]').addEventListener('click', onConsentResetClick);
+}());
 </script>
 </body>
 </html>

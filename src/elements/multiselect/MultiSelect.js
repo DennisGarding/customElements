@@ -1,30 +1,30 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import { MultiSelectStyle } from "./MultiSelectStyle";
 
-class MultiSelect extends LitElement {
+export class MultiSelect extends LitElement {
     static styles = MultiSelectStyle;
 
     static properties = {
-        jsonData: { type: Array, attribute: 'json-data' },
-        displayField: { type: String, attribute: 'display-field' },
-        valueField: { type: String, attribute: 'value-field' },
-        value: { type: Array },
         name: { type: String },
-        open: { type: Boolean }
-    };
+        open: { type: Boolean },
+        value: { type: Array },
+    }
 
-    timeoutLength = 300;
-    hiddenClass = 'hidden';
-
-    list = null;
-    searchField = null;
-    closeTimeout = null;
+    // Used for form association
+    static formAssociated = true;
 
     // Used for form association
     #internals;
 
-    // Used for form association
-    static formAssociated = true;
+    timeoutLength = 300;
+
+    hiddenClass = 'hidden';
+
+    searchField = null;
+
+    list = null;
+
+    valueList = {};
 
     constructor() {
         super();
@@ -36,69 +36,69 @@ class MultiSelect extends LitElement {
     connectedCallback() {
         super.connectedCallback();
 
-        if (!(this.jsonData instanceof Array)) {
-            throw new Error('No "json-data" provided');
-        }
-
-        if (!this.displayField) {
-            throw new Error('No "display-field" provided');
-        }
-
-        if (!this.valueField) {
-            throw new Error('No "value-field" provided');
-        }
-
-        if (!(this.value instanceof Array)) {
-            this.value = [];
-            this.setAttribute('value', JSON.stringify(this.value));
-        }
-
-        this.setFormValue();
+        this._registerEventListeners();
     }
 
-    /**
-     * Function is used for form association
-     */
-    setFormValue() {
-        const formData = new FormData();
-        this.value.forEach((val) => {
-            formData.append(`${this.name}[]`, val);
-        });
-
-        this.#internals.setFormValue(formData);
+    render() {
+        return html`
+            <div class="cs-multi-select-wrapper">
+                <div class="cs-multi-select-badge-container" @mouseenter="${this.onMouseEnter}" @mouseleave="${this.onMouseLeave}">
+                    ${
+                            Object.values(this.valueList).map((value) => {
+                                return html`
+                                    <multi-select-badge value="${value.value}" @cs--remove="${this.onBadgeClicked}">
+                                        ${value.innerHTML}
+                                    </multi-select-badge>`;
+                            })
+                    }
+                </div>
+                <div class="cs-multi-select-search-field-input-container">
+                    <span class="cs-multi-select-chevron-down"</span>
+                    <input type="text" class="cs-multi-select-search-field-input" @input="${this.onInput}" @focus="${this.onFocus}" @blur="${this.onBlur}"/>
+                </div>
+                <div class="cs-multi-select-selection-list">
+                    <slot></slot>
+                </div>
+            </div>
+        `;
     }
 
-    onChangeValue(event) {
-        if (this.open) {
-            this.getSearchField().focus();
+    onRegisterOption(e) {
+        if (e.detail.selected !== true) {
+            return;
         }
 
-        const value = parseInt(event.currentTarget.dataset.value);
-        let itemIndex = -1;
-        this.value.some((key, index) => {
-            if (parseInt(key) === value) {
-                itemIndex = index;
-            }
-        });
-
-        if (itemIndex > -1) {
-            this.value.splice(itemIndex, 1);
-        } else {
-            this.value.push(value);
-        }
-
-        this.setAttribute('value', JSON.stringify(this.value));
-        this.setFormValue();
+        this.addValue(e.detail);
     }
 
-    onChevronClick() {
-        this.getSearchField().focus();
+    onOptionClicked(e) {
+        clearTimeout(this.closeTimeout);
+        this._getSearchField().focus();
+
+        this.hasValue(e.detail) ? this.removeValue(e.detail) : this.addValue(e.detail);
+    }
+
+    onBadgeClicked(e) {
+        const option = this.querySelector(`[value="${e.detail.value}"]`);
+        option.removeAttribute('selected');
+
+        this.removeValue(e.detail);
+    }
+
+    onFocus() {
+        this.open = true;
+        this.setAttribute('open', 'open');
+        this._adjustListSize();
+    }
+
+    onBlur() {
+        this.closeTimeout = setTimeout(this._close.bind(this), this.timeoutLength);
     }
 
     onInput(event) {
         const value = event.currentTarget.value.toLowerCase();
 
-        this.getList().querySelectorAll('.multi-select-select-list-item').forEach(listItem => {
+        this.querySelectorAll('multi-select-option').forEach(listItem => {
             if (listItem.innerHTML.toLowerCase().indexOf(value) > -1) {
                 listItem.classList.remove(this.hiddenClass);
             } else {
@@ -107,18 +107,22 @@ class MultiSelect extends LitElement {
         });
     }
 
-    onFocusInput() {
-        clearTimeout(this.closeTimeout);
-        this.showList();
+    _registerEventListeners() {
+        this.addEventListener("cs--multi-select-option-register", this.onRegisterOption.bind(this));
+        this.addEventListener("cs--multi-select-option-clicked", this.onOptionClicked.bind(this));
     }
 
-    onBlur() {
-        this.closeTimeout = setTimeout(() => {
-            this.hideList();
-        }, this.timeoutLength);
+    _close() {
+        this.open = false;
+        this.removeAttribute('open');
     }
 
     onMouseEnter(event) {
+        if (this.open) {
+            this.onMouseLeave(event);
+            return;
+        }
+
         event.currentTarget.addEventListener('wheel', this.onScroll.bind(this, event.currentTarget));
     }
 
@@ -131,115 +135,63 @@ class MultiSelect extends LitElement {
         element.scrollLeft += event.deltaY / 10;
     }
 
-    isSelected(value) {
-        let includes = false;
-
-        this.value.some((current) => {
-            if (parseInt(current) === value || String(current) === value) {
-                includes = true;
-
-                return true;
-            }
-        });
-
-        return includes;
-    }
-
-    getListItem(value) {
-        let listItem;
-
-        this.jsonData.some((item) => {
-            if (this.compareAsInteger(item, value) || this.compareAsString(item, value)) {
-                listItem = item;
-
-                return true;
-            }
-        });
-
-        return listItem;
-    }
-
-    compareAsString(item, value) {
-        return String(item[this.valueField]) === value;
-    }
-
-    compareAsInteger(item, value) {
-        return parseInt(item[this.valueField]) === value;
-    }
-
-    showList() {
-        this.setAttribute('open', 'true');
-        this.adjustSize();
-    }
-
-    adjustSize() {
-        this.getList().style = `width: ${this.getSearchField().clientWidth}px;`;
-    }
-
-    hideList() {
-        this.removeAttribute('open');
-    }
-
-    getList() {
-        if (this.list === null) {
-            this.list = this.renderRoot.querySelector('.multi-select-select-list')
+    hasValue(detail) {
+        let item = null;
+        if (this.valueList.hasOwnProperty(detail.value)) {
+            item = this.valueList[detail.value];
         }
 
-        return this.list;
+        return item !== null;
     }
 
-    getSearchField() {
+    addValue(detail) {
+        if (!detail.selected) {
+            return;
+        }
+
+        this.valueList[detail.value] = detail;
+        const value = Object.keys(this.valueList);
+        this._setFormValue(value);
+    }
+
+    removeValue(detail) {
+        if (detail.selected) {
+            return;
+        }
+
+        delete this.valueList[detail.value];
+        const value = Object.keys(this.valueList);
+        this._setFormValue(value);
+    }
+
+    _adjustListSize() {
+        this._getList().style = `width: ${this._getSearchField().clientWidth}px;`;
+    }
+
+    _getSearchField() {
         if (this.searchField === null) {
-            this.searchField = this.renderRoot.querySelector('.multi-select-search-field-input')
+            this.searchField = this.renderRoot.querySelector('.cs-multi-select-search-field-input')
         }
 
         return this.searchField;
     }
 
-    render() {
-        return html`
-            <div class="multi-select-container">
-                <div class="multi-select-wrapper">
-                    <div class="multi-select-selected-container" @mouseenter="${this.onMouseEnter}"
-                         @mouseleave="${this.onMouseLeave}">
-                        ${this.value.map(id => {
-                                    const listItem = this.getListItem(id);
-                                    if (!listItem) {
-                                        return;
-                                    }
-                                    return html`
-                                        <span class="multi-select-select-badge"
-                                              data-value="${listItem[this.valueField]}">
-                                            ${listItem[this.displayField]}&nbsp;
-                                            <span class="cross"
-                                                  data-value="${listItem[this.valueField]}"
-                                                  @click="${this.onChangeValue}">&#10799;</span>
-                                        </span>`;
-                                }
-                        )}
-                    </div>
-                    <div class="multi-select-search-field-input-container">
-                        <span class="multi-select-chevron-down" @click="${this.onChevronClick}">&#8964;</span>
-                        <input type="text" class="multi-select-search-field-input"
-                               @input="${this.onInput}"
-                               @focus="${this.onFocusInput}"
-                               @blur="${this.onBlur}"/>
-                    </div>
-                    <div class="multi-select-select-list${this.open ? '' : ` ${this.hiddenClass}`}">
-                        ${this.jsonData.map(listItem => {
-                                    const selected = this.isSelected(listItem[this.valueField]) ? ' selected' : '';
+    _getList() {
+        if (this.list === null) {
+            this.list = this.renderRoot.querySelector('.cs-multi-select-selection-list')
+        }
 
-                                    return html`
-                                        <div class="multi-select-select-list-item${selected}"
-                                             @click=${this.onChangeValue}
-                                             data-value="${listItem[this.valueField]}">${listItem[this.displayField]}
-                                        </div>`;
-                                }
-                        )}
-                    </div>
-                </div>
-            </div>`;
+        return this.list;
+    }
+
+    _setFormValue(value) {
+        this.setAttribute('value', JSON.stringify(value));
+
+        const formData = new FormData();
+        value.forEach((entry) => {
+            formData.append(`${this.name}[]`, entry);
+        });
+
+        this.#internals.setFormValue(formData);
     }
 }
-
-export { MultiSelect };
